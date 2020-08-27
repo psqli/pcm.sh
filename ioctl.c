@@ -1,9 +1,9 @@
 // 2020-08-17
 // 2020-08-22 rewritten
 //
-// usage: ioctl <driver_char> <function_number> [<value> | <size> r,w]
+// usage: ioctl <driver> <function_number> [<value> | <size> r,w]
 //
-//   driver_char: E.g. 'A' for ALSA PCM subsystem.
+//   driver:      E.g. 65 for ALSA PCM subsystem.
 //   function:    Number of the operation to be called on device.
 //   value:       If no argument follows value, value is passed to ioctl
 //                instead of a pointer to buffer (read about size below).
