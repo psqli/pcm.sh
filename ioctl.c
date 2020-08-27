@@ -48,16 +48,16 @@ int main(int argc, char **argv)
 
 		rw = (*argv)[0] + (*argv)[1] == 'r' + 'w' ? 0x3 :
 		     (*argv)[0] == 'r' ? 0x2 : 0x1;
-
-		// only read to buffer if writing to ioctl
-		if (rw & 0x1)
-			read(0, arg, size);
 	} else if (argc == 1) {
 		arg = (void*) atol(*argv); argv++; argc++;
 	}
 
 	unsigned long request = rw << 30 | size << 16 | driver << 8 | function;
 	int ret;
+
+	// Read buffer from stdin if writing to ioctl
+	if (rw & 0x1)
+		read(0, arg, size);
 
 	// Call ioctl() system call
 	ret = ioctl(1, request, arg);
