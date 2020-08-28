@@ -38,15 +38,14 @@ int main(int argc, char **argv)
 
 	void *arg = NULL;
 
-	if (argc > 1) {
+	if (argc == 1) {
+		arg = (void*) atol(*argv); argv++; argc++;
+	} else if (argc > 1) {
 		size = atoi(*argv) & 0x3fff; argv++; argc--;
+		rw   = (*argv)[0] + (*argv)[1] == 'r' + 'w' ? 0x3 :
+		       (*argv)[0] == 'r' ? 0x2 : 0x1;
 
 		arg = calloc(1, size);
-
-		rw = (*argv)[0] + (*argv)[1] == 'r' + 'w' ? 0x3 :
-		     (*argv)[0] == 'r' ? 0x2 : 0x1;
-	} else if (argc == 1) {
-		arg = (void*) atol(*argv); argv++; argc++;
 	}
 
 	unsigned long request = rw << 30 | size << 16 | driver << 8 | function;
