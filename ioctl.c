@@ -41,9 +41,6 @@ int main(int argc, char **argv)
 	if (argc > 1) {
 		size = atoi(*argv) & 0x3fff; argv++; argc--;
 
-		if (size == 0)
-			return 1;
-
 		arg = calloc(1, size);
 
 		rw = (*argv)[0] + (*argv)[1] == 'r' + 'w' ? 0x3 :
