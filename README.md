@@ -1,8 +1,8 @@
 pcm.sh
 ======
 
-`pcm.sh` simply set up a PCM device on stdout and forwards stdin to stdout
-by calling `cat`. If stdout is not a PCM device it still forwards the data.
+`pcm.sh` forwards data from stdin to stdout. **If stdout is a PCM device it is
+set up.**
 
 The following example outputs input_file to PCM device Card 0 Device 0:
 
