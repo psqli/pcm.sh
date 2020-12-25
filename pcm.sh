@@ -62,9 +62,7 @@ val="44ac0000"
 buf=$(echo "$buf" | sed "13s/[0-9a-fA-F]\{16\}/$val$val/")
 
 # Set hardware parameters
-! echo "$buf" \
-| xxd -r -p - \
-| ./ioctl $ALSA_DRIVER $HW_PARAMS 608 rw 2>/dev/null
+echo "$buf" | xxd -r -p - | ./ioctl $ALSA_DRIVER $HW_PARAMS 608 rw 2>/dev/null
 
 # Prepare device
 ./ioctl $ALSA_DRIVER $PREPARE
