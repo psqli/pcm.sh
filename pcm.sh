@@ -42,6 +42,49 @@ get_hwparams_initialized() {
 	done
 }
 
+invert_bytes() {
+	i=${#1}
+	while [ $i -gt 0 ]; do
+		i=$[$i-2]
+		echo -n ${1:$i:2}
+	done
+}
+
+to_hex() {
+	invert_bytes $(printf "%08x" $1)
+}
+
+# Get parameters from command line
+# ================================
+
+# Default parameters
+bits_per_sample=16
+channels=2
+rate=44100
+
+while getopts b:c:r: name; do
+	case $name in
+		b) bits_per_sample="$OPTARG";;
+		c) channels="$OPTARG";;
+		r) rate="$OPTARG";;
+		?) printf "Usage: %s: [-b sample_bits] [-c channels] [-r rate]\n" $0
+		   exit 2;;
+	esac
+done
+
+shift $(($OPTIND - 1))
+#printf "Remaining arguments are: %s\n" "$*"
+
+# Convert parameters to hexadecimal
+# =================================
+
+bits_per_sample="$(to_hex $bits_per_sample)"
+channels="$(to_hex $channels)"
+rate="$(to_hex $rate)"
+
+# Prepare hardware parameters buffer
+# ==================================
+
 # Initialize buffer to empty string
 buf="$(get_hwparams_initialized)"
 
@@ -49,16 +92,16 @@ buf="$(get_hwparams_initialized)"
 val="0800000000000000000000000000000000000000000000000000000000000000"
 buf=$(echo "$buf" | sed "2s/.*/$val/")
 
-# sets bits per sample to 16
-val="10000000"
+# Set bits per sample
+val="$bits_per_sample"
 buf=$(echo "$buf" | sed "10s/[0-9a-fA-F]\{16\}/$val$val/")
 
-# sets channels to 2
-val="02000000"
+# Set channels
+val="$channels"
 buf=$(echo "$buf" | sed "12s/[0-9a-fA-F]\{16\}/$val$val/")
 
-# sets rate to 44100
-val="44ac0000"
+# Set rate
+val="$rate"
 buf=$(echo "$buf" | sed "13s/[0-9a-fA-F]\{16\}/$val$val/")
 
 # Set hardware parameters

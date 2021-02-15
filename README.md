@@ -4,6 +4,8 @@ pcm.sh
 `pcm.sh` forwards data from stdin to stdout. **If stdout is a PCM device it is
 set up.**
 
+	usage: pcm.sh [-b <sample_bits>] [-c <channels>] [-r <rate>]
+
 The following example outputs input_file to PCM device Card 0 Device 0:
 
 	cat input_file | pcm.sh > /dev/snd/pcmC0D0
