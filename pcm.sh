@@ -43,15 +43,11 @@ get_hwparams_initialized() {
 }
 
 invert_bytes() {
-	i=${#1}
-	while [ $i -gt 0 ]; do
-		i=$[$i-2]
-		echo -n ${1:$i:2}
-	done
+	xxd -r -p | xxd -e | cut -d' ' -f 2
 }
 
 to_hex() {
-	invert_bytes $(printf "%08x" $1)
+	printf "%08x" $1 | invert_bytes
 }
 
 # Get parameters from command line
