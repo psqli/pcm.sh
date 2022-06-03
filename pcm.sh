@@ -42,12 +42,14 @@ get_hwparams_initialized() {
 	done
 }
 
-invert_bytes() {
-	xxd -r -p | xxd -e | cut -d' ' -f 2
+to_hex() {
+	# convert to hexadecimal and Little-Endian
+	printf "%08x" $1 | xxd -r -p | xxd -e | cut -d' ' -f 2
 }
 
-to_hex() {
-	printf "%08x" $1 | invert_bytes
+setparam() {
+	param_id=$1; min=$(to_hex $2); max=$(to_hex $2)
+	sed "${param_id}s/[0-9a-fA-F]\{16\}/${min}${max}/"
 }
 
 # Get parameters from command line
@@ -71,13 +73,6 @@ done
 shift $(($OPTIND - 1))
 #printf "Remaining arguments are: %s\n" "$*"
 
-# Convert parameters to hexadecimal
-# =================================
-
-bits_per_sample="$(to_hex $bits_per_sample)"
-channels="$(to_hex $channels)"
-rate="$(to_hex $rate)"
-
 # Prepare hardware parameters buffer
 # ==================================
 
@@ -88,17 +83,13 @@ buf="$(get_hwparams_initialized)"
 val="0800000000000000000000000000000000000000000000000000000000000000"
 buf=$(echo "$buf" | sed "2s/.*/$val/")
 
-# Set bits per sample
-val="$bits_per_sample"
-buf=$(echo "$buf" | sed "10s/[0-9a-fA-F]\{16\}/$val$val/")
-
-# Set channels
-val="$channels"
-buf=$(echo "$buf" | sed "12s/[0-9a-fA-F]\{16\}/$val$val/")
-
-# Set rate
-val="$rate"
-buf=$(echo "$buf" | sed "13s/[0-9a-fA-F]\{16\}/$val$val/")
+PARAM_SAMPLE_BITS=10
+PARAM_CHANNELS=12
+PARAM_RATE=13
+buf=$(echo $buf | \
+	setparam $PARAM_SAMPLE_BITS $bits_per_sample | \
+	setparam $PARAM_CHANNELS    $channels | \
+	setparam $PARAM_RATE        $rate )
 
 # Set hardware parameters
 echo "$buf" | xxd -r -p - | ./ioctl $ALSA_DRIVER $HW_PARAMS 608 rw 2>/dev/null
