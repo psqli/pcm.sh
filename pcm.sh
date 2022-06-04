@@ -42,9 +42,27 @@ get_hwparams_initialized() {
 	done
 }
 
-to_hex() {
-	# convert to hexadecimal and Little-Endian
-	printf "%08x" $1 | xxd -r -p | xxd -e | cut -d' ' -f 2
+# In hexadecimal format, two characters represent one byte.
+# For splitting bytes, just add a newline each two characters :-)
+split_bytes ()
+{
+	fold -w 2
+}
+
+# Converts a continuous hexadecimal string from standard input into
+# little-endian and writes to standard output.
+as_little_endian ()
+( # runs in a subshell
+	out=""
+	for byte in $(split_bytes); do
+		out="$byte$out";
+	done
+	printf "$out"
+)
+
+to_hex ()
+{
+	printf "%08x" $1 | as_little_endian
 }
 
 setparam() {
