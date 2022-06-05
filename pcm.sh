@@ -15,29 +15,30 @@ get_hwparams_initialized() {
 	# set flags to zero
 	i=0; size=1;
 	while [ $i -lt $size ]; do
-		echo "00000000";
+		printf "%08x\n"
 		i=$(( i + 1 ));
 	done
 
 	# fill all masks with ones (ffff)
 	i=0; size=8;
 	while [ $i -lt $size ]; do
-		echo "ffffffffffffffffffffffffffffffff" \
-		     "ffffffffffffffffffffffffffffffff";
+		printf "%032x %032x\n" | tr "0" "f"
 		i=$(( i + 1 ));
 	done
 
 	# fill all intervals with full range
 	i=0; size=21;
 	while [ $i -lt $size ]; do
-		echo "00000000ffffffff00000000";
+		printf "%08x"              # min
+		printf "%08x" | tr "0" "f" # max
+		printf "%08x\n"
 		i=$(( i + 1 ));
 	done
 
 	# fill remaining integers
 	i=0; size=24;
 	while [ $i -lt $size ]; do
-		echo "00000000";
+		printf "%08x\n"
 		i=$(( i + 1 ));
 	done
 }
