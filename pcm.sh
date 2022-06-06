@@ -103,13 +103,11 @@ buf="$(get_hwparams_initialized)"
 val=$(printf "%064x" $((1 << 3)) | as_little_endian)
 buf=$(echo "$buf" | sed "2s/.*/$val/")
 
-PARAM_SAMPLE_BITS=10
-PARAM_CHANNELS=12
-PARAM_RATE=13
+SAMPLE_BITS=10 CHANNELS=12 RATE=13
 buf=$(echo $buf | \
-	setparam $PARAM_SAMPLE_BITS $bits_per_sample | \
-	setparam $PARAM_CHANNELS    $channels | \
-	setparam $PARAM_RATE        $rate )
+	setparam $SAMPLE_BITS $bits_per_sample | \
+	setparam $CHANNELS    $channels | \
+	setparam $RATE        $rate )
 
 # Set hardware parameters
 echo "$buf" | xxd -r -p - | ./ioctl $ALSA_DRIVER $HW_PARAMS 608 rw 2>/dev/null
