@@ -99,7 +99,7 @@ shift $(($OPTIND - 1))
 buf="$(get_hwparams_initialized)"
 
 # sets the access mode to Read/Write Interleaved
-val="0800000000000000000000000000000000000000000000000000000000000000"
+val=$(printf "%064x" $((1 << 3)) | as_little_endian)
 buf=$(echo "$buf" | sed "2s/.*/$val/")
 
 PARAM_SAMPLE_BITS=10
