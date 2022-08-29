@@ -48,9 +48,9 @@ main() {
 # little-endian by default
 print_bytes() (
 	bits=$1; val=$2; if [ -z $val ]; then val=0; fi
-    i=0; while [ $i -lt $bits ]; do
-        printf "%b" $(printf "\\%o" $((($val >> i) & 0xff))); i=$((i+8))
-    done
+	i=0; while [ $i -lt $bits ]; do
+		printf "%b" $(printf "\\%o" $((($val >> i) & 0xff))); i=$((i+8))
+	done
 )
 s8()  { print_bytes 8  $1; }
 s16() { print_bytes 16 $1; }
