@@ -36,3 +36,21 @@ buffer is the same filled with data from stdin if write flag is set.
 If `ioctl()` fails its error number (errno) is returned as the exit status
 of the program. If ioctl return positive value, there is no straightforward
 way to know whether the return value corresponds to an error.
+
+
+POSIX compliance
+================
+
+`pcm.sh` shall be fully POSIX-compliant. Here are some notes of issues that have
+caused or may cause confusion:
+
+- The `%b` conversion specifier for the `printf` is supported according to item
+  7 in the "EXTENDED DESCRIPTION" section of the [printf utility spec](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/printf.html).
+
+- The section "2.6.4 Arithmetic Expansion" of the [POSIX shell specification](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html)
+  states that both the prefix and postfix operators are not required to be
+  implemented by the shell. The script used one of these operators, but this was
+  fixed by 03f3ac3297dc1474d5954e03de99e102026200de
+
+- The `xxd` tool (which is not part of POSIX) is used for debugging purposes,
+  and is called only when the debug option is specified.
