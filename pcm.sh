@@ -15,14 +15,14 @@ main() {
 	debug=false
 
 	# Read command line options
-	while getopts b:c:dr: name; do
+	while getopts b:c:r:dh name; do
 		case $name in
 			b) bits_per_sample="$OPTARG";;
 			c) channels="$OPTARG";;
 			r) rate="$OPTARG";;
 			d) debug=true;;
-			?) printf "Usage: %s: [-b sample_bits] [-c channels] [-r rate]\n" $0
-			exit 2;;
+			h) print_help; exit 0;;
+			?) print_help; exit 1;;
 		esac
 	done
 	shift $(($OPTIND - 1))
@@ -40,6 +40,14 @@ main() {
 
 	# Wait for PCM buffer to drain
 	./ioctl $ALSA_DRIVER $DRAIN
+}
+
+print_help() {
+	printf "Usage: pcm.sh [OPTIONS]...\n"
+	printf "Options:\n"
+	printf "  -b <sample_bits>  Number of bits per sample (default = ${bits_per_sample}).\n"
+	printf "  -c <channels>     Number of channels (default = ${channels}).\n"
+	printf "  -r <rate>         Number of frames per second (default = ${rate}).\n"
 }
 
 # Binary output helpers
