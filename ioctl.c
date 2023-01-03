@@ -23,6 +23,10 @@
 #include <sys/ioctl.h> // ioctl()
 #include <unistd.h>    // read(), write()
 
+void read_all(int fd, void *buf, size_t count) {
+	int r; while ((r = read(fd, buf, count)) > 0) { buf += r; count -= r; }
+}
+
 int main(int argc, char **argv)
 {
 	argv++; argc--;
@@ -53,7 +57,7 @@ int main(int argc, char **argv)
 
 	// Read buffer from stdin if writing to ioctl
 	if (rw & 0x1)
-		read(0, arg, size);
+		read_all(0, arg, size);
 
 	// Call ioctl() system call
 	ret = ioctl(1, request, arg);
