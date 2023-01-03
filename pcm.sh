@@ -78,7 +78,7 @@ get_hwparams() {
 	mask_any # Format
 	mask_any # Subformat
 
-	i=5; while [ $((i--)) -gt 0 ]; do mask_any; done
+	i=5; while [ $i -gt 0 ]; do mask_any; i=$((i-1)); done
 
 	interval_val $bits_per_sample # Sample bits
 	interval_any # Frame bits
@@ -93,10 +93,10 @@ get_hwparams() {
 	interval_any # Buffer bytes
 	interval_any # Tick time (us)
 
-	i=9; while [ $((i--)) -gt 0 ]; do interval_any; done
+	i=9; while [ $i -gt 0 ]; do interval_any; i=$((i-1)); done
 
 	# fill remaining integers
-	i=24; while [ $((i--)) -gt 0 ]; do s32; done
+	i=24; while [ $i -gt 0 ]; do s32; i=$((i-1)); done
 }
 
 main $@
