@@ -1,10 +1,4 @@
 #!/bin/sh
-#
-# 2020-08-14
-#
-# usage: cat sound_file | pcm.sh >/dev/snd/pcmC0D0p
-#
-# Ricardo Biehl Pasquali
 
 main() {
 	# Default parameters
