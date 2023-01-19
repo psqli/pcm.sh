@@ -101,4 +101,4 @@ get_hwparams() {
 	i=24; while [ $i -gt 0 ]; do s32; i=$((i-1)); done
 }
 
-main $@
+main "$@"
